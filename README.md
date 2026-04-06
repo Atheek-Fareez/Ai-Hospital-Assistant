@@ -21,19 +21,6 @@ This project is a beginner-friendly AI chatbot that helps users understand hospi
 - JSON
 - python-dotenv
 
-## Folder structure
-
-  AI-Hospital-Assistant-Chatbot/
-│
-├── app.py
-├── README.md
-├── requirements.txt
-├── .gitignore
-├── patients.json
-├── doctors.json
-├── bills.json
-├── tokens.json
-└── .env   ← local only, not uploaded
 
 ## How to Run the Project
 
