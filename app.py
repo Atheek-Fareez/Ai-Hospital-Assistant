@@ -23,11 +23,103 @@ PATIENT_FILE = "patients.json"
 BILL_FILE = "bills.json"
 DOCTOR_FILE = "doctors.json"
 TOKEN_FILE = "tokens.json"
+SYSTEM_GUIDE_FILE = "System_Guide.txt"
 
 
-# -------------------------
+# System guide / knowledge base
+
+DEFAULT_SYSTEM_GUIDE = """
+AI Hospital Assistant - Staff Knowledge Base
+
+Welcome to the hospital system. This guide helps new staff understand the full workflow from start to end.
+
+1. Doctor Management
+- First, check whether doctors are added in the system.
+- Each doctor should have doctor name, specialization, consultation fee, and status.
+- Only active doctors should be used for billing and consultation.
+
+2. Patient Registration
+- When a new patient comes, register the patient first.
+- Enter patient name, phone number, and age.
+- The system creates a unique patient ID.
+
+3. Billing Workflow
+- After patient registration, go to Billing.
+- Select the patient.
+- Select the doctor.
+- Select the service.
+- If the service is Consultation, the doctor consultation fee can be used.
+- Save the bill.
+- The bill is first created with PENDING status.
+
+4. Payment Workflow
+- Go to Payments & Tokens.
+- Select the pending bill.
+- Mark the bill as PAID.
+- Token must not be generated before payment.
+
+5. Token Workflow
+- Tokens are generated only for Consultation bills.
+- Token is created after payment.
+- Token is doctor-wise and date-wise.
+- Each doctor has a separate daily token queue.
+- Token status starts as WAITING.
+
+6. Staff Responsibility
+- Check doctor availability.
+- Register patients correctly.
+- Create correct bills.
+- Confirm payment.
+- Guide patients using token number and doctor details.
+
+7. AI Assistant Rules
+- Explain workflow in simple English.
+- Help new staff understand the hospital management process.
+- Do not give medical diagnosis.
+- Do not suggest medicine or treatment.
+- If asked medical advice, say: Please consult your doctor for medical advice.
+
+8. End-to-End Workflow
+Check doctors -> Register patient -> Create bill -> Mark bill as paid -> Generate token -> Guide patient to wait for consultation.
+"""
+
+
+def load_system_guide():
+    if os.path.exists(SYSTEM_GUIDE_FILE):
+        try:
+            with open(SYSTEM_GUIDE_FILE, "r", encoding="utf-8") as file:
+                return file.read().strip()
+        except Exception:
+            return DEFAULT_SYSTEM_GUIDE
+    return DEFAULT_SYSTEM_GUIDE
+
+
+SYSTEM_GUIDE_TEXT = load_system_guide()
+
+
+def build_system_prompt():
+    return f"""
+You are an AI Hospital Assistant and staff training guide.
+
+Use the following hospital knowledge base to answer questions:
+
+{SYSTEM_GUIDE_TEXT}
+
+Rules:
+- Explain step-by-step
+- Use very simple English
+- Focus on hospital workflow, patient registration, doctor management, billing, payment, and token process
+- Help new staff understand the complete system from start to end
+- Do NOT give medical diagnosis
+- Do NOT prescribe medicine
+- Do NOT suggest treatment
+- If asked for medical advice, say: Please consult your doctor for medical advice
+"""
+
+
+
 # Patient functions
-# -------------------------
+
 def load_patients():
     if os.path.exists(PATIENT_FILE):
         try:
@@ -62,9 +154,8 @@ def add_patient(name, phone, age):
     return new_patient
 
 
-# -------------------------
 # Billing functions
-# -------------------------
+
 def load_bills():
     if os.path.exists(BILL_FILE):
         try:
@@ -132,7 +223,6 @@ def mark_bill_as_paid(bill_id):
             bill["status"] = "PAID"
             save_bills(bills)
 
-            # Generate token only for consultation bills
             if bill.get("service") == "Consultation":
                 token = create_token_from_bill(bill)
                 return bill, token
@@ -142,9 +232,9 @@ def mark_bill_as_paid(bill_id):
     return None, None
 
 
-# -------------------------
+
 # Doctor functions
-# -------------------------
+
 def load_doctors():
     if os.path.exists(DOCTOR_FILE):
         try:
@@ -180,9 +270,9 @@ def add_doctor(doctor_name, specialization, consultation_fee, active_status):
     return new_doctor
 
 
-# -------------------------
+
 # Token functions
-# -------------------------
+
 def load_tokens():
     if os.path.exists(TOKEN_FILE):
         try:
@@ -248,41 +338,34 @@ def create_token_from_bill(bill):
     return new_token
 
 
-# -------------------------
 # App UI
-# -------------------------
+
 st.set_page_config(page_title="AI Hospital Assistant", layout="wide")
 
 st.title("🏥 AI Hospital Assistant")
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(
-    ["AI Assistant", "Patient Registration", "Billing", "Doctor Management", "Payments & Tokens"]
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+    [
+        "AI Assistant",
+        "Patient Registration",
+        "Billing",
+        "Doctor Management",
+        "Payments & Tokens",
+        "System Guide"
+    ]
 )
 
 
-# -------------------------
+
 # AI Assistant Tab
-# -------------------------
+
 with tab1:
     st.subheader("Ask Hospital Questions")
-    st.write("Ask anything about hospital workflows, appointments, billing, etc.")
+    st.write("Ask anything about hospital workflow, new staff tasks, billing, payment, and token process.")
 
     user_input = st.text_input("Enter your question:")
 
-    SYSTEM_PROMPT = """
-    You are an AI Hospital Assistant.
-
-    Rules:
-    - Follow real hospital workflows
-    - Explain step-by-step
-    - Use simple English
-    - Do NOT give medical diagnosis
-    - Focus on:
-      - patient registration
-      - appointments
-      - billing
-      - hospital operations
-    """
+    SYSTEM_PROMPT = build_system_prompt()
 
     if st.button("Ask"):
         if not api_key:
@@ -295,17 +378,16 @@ with tab1:
             try:
                 with st.spinner("Thinking..."):
                     response = model.generate_content(
-                        SYSTEM_PROMPT + "\nUser: " + user_input
+                        SYSTEM_PROMPT + "\n\nUser Question: " + user_input
                     )
-                    st.write("### 🤖 Response:")
+                    st.write("Response:")
                     st.write(response.text)
             except Exception as e:
                 st.error(f"❌ Error: {str(e)}")
 
 
-# -------------------------
 # Patient Registration Tab
-# -------------------------
+
 with tab2:
     st.subheader("Register New Patient")
 
@@ -329,9 +411,8 @@ with tab2:
         st.info("No patients registered yet.")
 
 
-# -------------------------
 # Billing Tab
-# -------------------------
+
 with tab3:
     st.subheader("Create Bill")
 
@@ -339,7 +420,6 @@ with tab3:
     doctors = load_doctors()
     selected_doctor_data = None
 
-    # Patient selection
     if patients:
         patient_options = {
             f"{p.get('patient_id')} - {p.get('name', 'Unknown')}": p.get("patient_id")
@@ -361,7 +441,6 @@ with tab3:
         st.warning("No patients available. Please register a patient first.")
         patient_id = None
 
-    # Doctor selection
     if doctors:
         active_doctors = [d for d in doctors if d.get("active_status") == "Active"]
 
@@ -401,7 +480,6 @@ with tab3:
         ["Consultation", "Laboratory", "Pharmacy", "X-Ray", "Scan", "Other"]
     )
 
-    # Auto-fill amount for consultation
     if service == "Consultation" and selected_doctor_data:
         amount = st.number_input(
             "Amount",
@@ -432,9 +510,8 @@ with tab3:
         st.info("No bills created yet.")
 
 
-# -------------------------
 # Doctor Management Tab
-# -------------------------
+
 with tab4:
     st.subheader("Add New Doctor")
 
@@ -461,14 +538,13 @@ with tab4:
         st.info("No doctors added yet.")
 
 
-# -------------------------
+
 # Payments & Tokens Tab
-# -------------------------
+
 with tab5:
     st.subheader("Mark Bill as Paid")
 
     bills = load_bills()
-
     pending_bills = [b for b in bills if b.get("status") == "PENDING"]
 
     if pending_bills:
@@ -513,3 +589,11 @@ with tab5:
         st.table(tokens)
     else:
         st.info("No tokens generated yet.")
+
+
+# System Guide Tab
+
+with tab6:
+    st.subheader("System Knowledge Base")
+    st.write("This is the hospital workflow guide used by the AI assistant.")
+    st.text_area("System Guide", SYSTEM_GUIDE_TEXT, height=500)
