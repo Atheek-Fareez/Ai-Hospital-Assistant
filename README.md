@@ -25,4 +25,4 @@ This project is a beginner-friendly AI chatbot that helps users understand hospi
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/ai-hospital-assistant-chatbot.git
+git clone https://github.com/Atheek-Fareez/ai-hospital-assistant-chatbot.git
