@@ -1,0 +1,321 @@
+Perfect 🔥 — now we will convert your system into a **real AI training assistant for new staff**.
+
+👉 This is exactly what companies love
+👉 This will impress your internship evaluators
+
+---
+
+# 🧠 AI Knowledge Base for New Staff (Full Workflow Guide)
+
+This is written as if:
+
+👉 A **new receptionist joins the hospital**
+👉 AI chatbot explains everything step by step
+
+You can use this inside your chatbot prompt or documentation.
+
+---
+
+# 🏥 AI Hospital Assistant – Staff Training Guide
+
+## Welcome Message
+
+“Welcome to the hospital system. I will guide you step by step on how to manage patients, billing, and tokens. Follow this workflow carefully.”
+
+---
+
+# 🔹 Step 1: Understand your role
+
+As a receptionist, your main tasks are:
+
+* register patients
+* select doctors
+* create bills
+* confirm payments
+* generate tokens
+* guide patients
+
+👉 You are the **first point of contact** for patients.
+
+---
+
+# 🔹 Step 2: Check doctors (very important first step)
+
+Before starting work, make sure doctors are available.
+
+## What you do:
+
+* go to **Doctor Management**
+* check active doctors
+
+## Why:
+
+* patients must select a doctor
+* billing depends on doctor
+* token system depends on doctor
+
+## Important:
+
+👉 Only **Active doctors** should be used
+
+---
+
+# 🔹 Step 3: Register a patient
+
+When a patient comes:
+
+## Ask patient:
+
+* name
+* phone number
+* age
+
+## What you do:
+
+* go to **Patient Registration**
+* enter details
+* click **Save Patient**
+
+## What system does:
+
+* generates Patient ID (example: P001)
+* saves patient data
+
+## Important:
+
+👉 Always register patient before billing
+
+---
+
+# 🔹 Step 4: Create a bill
+
+After registration:
+
+## What you do:
+
+* go to **Billing**
+* select patient
+* select doctor
+* select service
+
+## Services:
+
+* Consultation
+* Laboratory
+* Pharmacy
+* X-Ray
+* Scan
+
+## Important rule:
+
+👉 If service = **Consultation**, system uses doctor fee
+
+## What system does:
+
+* creates Bill ID (example: B001)
+* links patient + doctor
+* sets status = **PENDING**
+
+---
+
+# 🔹 Step 5: Confirm payment
+
+After creating bill:
+
+## What you do:
+
+* go to **Payments & Tokens**
+* select pending bill
+* click **Mark as Paid**
+
+## What system does:
+
+* changes status → PAID
+
+## Important rule:
+
+👉 Never generate token before payment
+
+---
+
+# 🔹 Step 6: Token generation (automatic)
+
+After payment:
+
+## If service = Consultation:
+
+👉 System automatically generates token
+
+## Token includes:
+
+* token number
+* doctor name
+* patient name
+* status
+
+## Example:
+
+* Token: 5
+* Doctor: Dr. Silva
+* Status: WAITING
+
+---
+
+# 🔹 Step 7: Understand token system
+
+## Rule 1: Doctor-wise tokens
+
+Each doctor has separate queue
+
+Example:
+
+* Dr. Silva → 1, 2, 3
+* Dr. Perera → 1, 2
+
+---
+
+## Rule 2: Daily reset
+
+Every day tokens start from 1
+
+---
+
+## Rule 3: Only consultation gets token
+
+Other services do not create tokens
+
+---
+
+## Rule 4: Token status
+
+* WAITING → patient waiting
+* ONGOING → doctor is seeing
+* DONE → finished
+
+---
+
+# 🔹 Step 8: Guide the patient
+
+After token is generated:
+
+## Tell patient:
+
+* their token number
+* doctor name
+* where to wait
+
+## Example:
+
+“Your token number is 5 for Dr. Silva. Please wait in the waiting area.”
+
+---
+
+# 🔹 Step 9: Use AI assistant when confused
+
+If you don’t know something:
+
+👉 Use AI Assistant tab
+
+## Ask questions like:
+
+* How to register a patient?
+* When is token generated?
+* What happens after payment?
+
+## AI will:
+
+* explain step by step
+* use simple English
+* guide your workflow
+
+---
+
+# 🔹 Step 10: Important rules (must follow)
+
+## ❌ Never do:
+
+* generate token before payment
+* skip patient registration
+* use inactive doctor
+* enter wrong amount
+
+---
+
+## ✅ Always do:
+
+* verify patient details
+* select correct doctor
+* confirm payment
+* follow system workflow
+
+---
+
+# 🔹 Step 11: Common mistakes to avoid
+
+## Mistake 1:
+
+Creating bill without selecting doctor
+👉 Fix: always select doctor
+
+## Mistake 2:
+
+Giving token before payment
+👉 Fix: only after PAID
+
+## Mistake 3:
+
+Wrong service selection
+👉 Fix: check service type
+
+---
+
+# 🔹 Step 12: Full workflow summary
+
+Here is the full process:
+
+```text
+Check doctors
+↓
+Register patient
+↓
+Create bill
+↓
+Confirm payment
+↓
+Generate token
+↓
+Guide patient
+```
+
+---
+
+# 🔹 Step 13: AI safety rules
+
+AI assistant will NOT:
+
+* give medical advice
+* suggest medicine
+* diagnose diseases
+
+If asked, AI will say:
+
+👉 “Please consult your doctor for medical advice.”
+
+---
+
+# 🔹 Step 14: Your goal as staff
+
+Your goal is:
+
+* manage patient flow smoothly
+* reduce waiting time
+* avoid errors
+* follow system correctly
+
+---
+
+# 🔹 Final message from AI
+
+“You are now ready to use the hospital system. Follow the steps carefully and use the AI assistant whenever needed.”
+
+
