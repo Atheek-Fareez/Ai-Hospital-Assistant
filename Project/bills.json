@@ -1,13 +1,1 @@
-[
-  {
-    "bill_id": "B001",
-    "patient_id": "P001",
-    "patient_name": "Shaahid ",
-    "doctor_id": "D001",
-    "doctor_name": "Dr.Atheek",
-    "service": "Consultation",
-    "amount": 5000.0,
-    "consultation_fee": 5000.0,
-    "status": "PAID"
-  }
-]
+[]
